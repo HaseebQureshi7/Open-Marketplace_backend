@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// MODEL Customer
+model Customer {
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  password  String
+}
+
+// MODEL Business
+model Business {
+  id             String @id @default(uuid())
+  name           String
+  email          String
+  phone          String
+  description    String
+  location       String
+  profilePicture String
+  password       String
+}
+
+// MODEL Product
+model Product {
+  id             String @id @default(uuid())
+  name           String
+  price          String
+  sellerId       String
+  category       String
+  description    String
+  availableUnits String
+  productImage   String
+}
+
+// MODEL Category
+model Category {
+  id            String @id @default(uuid())
+  name          String
+  description   String
+  categoryImage String
+}
+
+// MODEL Business Review
+model BusinessReview {
+  id         String   @id @default(uuid())
+  ofBusiness String
+  reviewBy   String
+  rating     String
+  reviewDate DateTime @default(now())
+}
+
+// MODEL Product Review
+model ProductReview {
+  id         String   @id @default(uuid())
+  ofProduct String
+  reviewBy   String
+  rating     String
+  reviewDate DateTime @default(now())
+}
+
+// MODEL MonthSales
+model MonthSales {
+  id                String @id @default(uuid())
+  ofBusiness        String
+  month             String
+  totalSales        Float  @default(0)
+  paymentDue        Float  @default(0)
+  chargedPercentage Float  @default(2)
+}
+
+// MODEL Order
+model Order {
+  id              String   @id @default(uuid())
+  customerId      String
+  businessId      String
+  productId       String
+  quantity        String
+  shippingAddress String
+  pinCode         Int
+  orderStatus     String   @default("Incomplete")
+  cashOnDelivery  Boolean
+  isReturnable    Boolean
+  orderDate       DateTime @default(now())
+}
