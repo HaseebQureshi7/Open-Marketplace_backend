@@ -5,12 +5,13 @@ import {
   EditBusinessAccount,
   RemoveBusinessAccount,
 } from "../controllers/BusinessController";
+import AuthMiddleware from "../middlewares/AuthMiddleware";
 
 const BusinessRouter = express.Router();
 
 BusinessRouter.get("/login", BusinessLogin);
 BusinessRouter.post("/signup", BusinessSignup);
-BusinessRouter.put("/editProfile/:id", EditBusinessAccount);
-BusinessRouter.delete("/removeAccount/:id", RemoveBusinessAccount);
+BusinessRouter.put("/editProfile", AuthMiddleware, EditBusinessAccount);
+BusinessRouter.delete("/removeAccount", AuthMiddleware, RemoveBusinessAccount);
 
 export default BusinessRouter;

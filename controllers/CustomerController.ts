@@ -1,5 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import GetUserFromToken from "../utils/GetUserFromToken";
+import { jwtSecret } from "../utils/JWTSecretKey";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +12,11 @@ const CustomerSignup = async (req: Request, res: Response) => {
     const data = req.body;
     const customer = await prisma.customer.create({ data });
     if (customer) {
-      res.status(201).json(customer);
+      const token = jwt.sign(customer, jwtSecret);
+      res.status(201).json({
+        token,
+        customer,
+      });
     } else {
       res.status(400).send("Customer not created!");
     }
@@ -29,7 +36,12 @@ const CustomerLogin = async (req: Request, res: Response) => {
       },
     });
     if (customer) {
-      res.status(200).json(customer);
+      const token = jwt.sign(customer, jwtSecret);
+
+      res.status(200).json({
+        token,
+        customer,
+      });
     } else {
       res.status(401).send("Invalid Email or password");
     }
@@ -42,11 +54,14 @@ const CustomerLogin = async (req: Request, res: Response) => {
 const EditCustomerAccount = async (req: Request, res: Response) => {
   try {
     const data = req.body;
-    const id = req.params.id;
+
+    const token: any = req.header("Authorization");
+    const user: any = GetUserFromToken(token, jwtSecret);
+
     await prisma.customer
       .update({
         where: {
-          id,
+          id: user.id,
         },
         data,
       })
@@ -60,11 +75,13 @@ const EditCustomerAccount = async (req: Request, res: Response) => {
 // Delete Profile / Delete Account
 const RemoveCustomerAccount = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const token: any = req.header("Authorization");
+    const user: any = GetUserFromToken(token, jwtSecret);
+
     await prisma.customer
       .delete({
         where: {
-          id,
+          id: user.id,
         },
       })
       .then(() => res.status(201).json("Account Deleted!"))
