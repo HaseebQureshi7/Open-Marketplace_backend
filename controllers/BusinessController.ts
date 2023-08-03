@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import GetUserFromToken from "../utils/GetUserFromToken";
 import { jwtSecret } from "../utils/JWTSecretKey";
+import { SaveProfilePicture } from "../utils/SaveImageLocally";
 
 const prisma = new PrismaClient();
 
@@ -10,9 +11,17 @@ const prisma = new PrismaClient();
 const BusinessSignup = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    const profilePictureBase64 = data.profilePicture; // Extract Base64 data from req.body
+    delete data.profilePicture; // Remove Base64 data from the 'data' object
+
+    const imageUrl = SaveProfilePicture(profilePictureBase64, "business"); // Save picture to ./static/business and get the image URL
+    if (imageUrl) {
+      data.profilePicture = imageUrl;
+    }
     const business = await prisma.business.create({ data });
     if (business) {
       const token = jwt.sign(business, jwtSecret);
+
       res.status(201).json({
         token,
         business,
@@ -36,8 +45,8 @@ const BusinessLogin = async (req: Request, res: Response) => {
       },
     });
     if (business) {
-      const token = jwt.sign({ businessId: business.id }, jwtSecret); // Update to use businessId in the token payload
-
+      const token = jwt.sign(business, jwtSecret);
+      // console.log(jwt.verify(token, jwtSecret))
       res.status(200).json({
         token,
         business,
@@ -57,6 +66,16 @@ const EditBusinessAccount = async (req: Request, res: Response) => {
 
     const token: any = req.header("Authorization");
     const user: any = GetUserFromToken(token, jwtSecret);
+
+    if (data.profilePicture) {
+      const imageUrl = SaveProfilePicture(data.profilePicture, "business");
+      if (imageUrl) {
+        // fs.unlink(`../static/business/${data.profilePicture}`, () => {
+        //   console.log('prev image deleted!')
+        // });
+        data.profilePicture = imageUrl;
+      }
+    }
 
     await prisma.business
       .update({

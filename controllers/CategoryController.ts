@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { SaveProfilePicture } from "../utils/SaveImageLocally";
 
 const prisma = new PrismaClient();
 
@@ -7,6 +8,14 @@ const prisma = new PrismaClient();
 const CreateCategory = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    const categoryImageBase64 = data.categoryImage; // Extract Base64 data from req.body
+    delete data.categoryImage; // Remove Base64 data from the 'data' object
+
+    const imageUrl = SaveProfilePicture(categoryImageBase64, "category"); // Save picture to ./static/business and get the image URL
+    if (imageUrl) {
+      data.categoryImage = imageUrl;
+    }
+
     const category = await prisma.category.create({ data });
     if (category) {
       res.status(201).json(category);
@@ -56,6 +65,17 @@ const EditCategory = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     const id = req.params.id;
+
+    if (data.categoryImage) {
+      const imageUrl = SaveProfilePicture(data.categoryImage, "category");
+      if (imageUrl) {
+        // fs.unlink(`../static/business/${data.profilePicture}`, () => {
+        //   console.log('prev image deleted!')
+        // });
+        data.categoryImage = imageUrl;
+      }
+    }
+
     await prisma.category
       .update({
         where: {
