@@ -64,7 +64,7 @@ model BusinessReview {
 // MODEL Product Review
 model ProductReview {
   id         String   @id @default(uuid())
-  ofProduct String
+  ofProduct  String
   reviewBy   String
   rating     String
   reviewDate DateTime @default(now())
@@ -89,6 +89,8 @@ model Order {
   quantity        String
   shippingAddress String
   pinCode         Int
+  orderAccepted   Boolean  @default(false)
+  deliveryTime    String
   orderStatus     String   @default("Incomplete")
   cashOnDelivery  Boolean
   isReturnable    Boolean

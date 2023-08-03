@@ -80,6 +80,25 @@ const GetAllProductsOfBusiness = async (req: Request, res: Response) => {
   }
 };
 
+// Get / Access All Products
+const GetAllProductsInCategory = async (req: Request, res: Response) => {
+  const catId = req.params.cid;
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        category: catId,
+      },
+    });
+    if (products) {
+      res.status(200).json(products);
+    } else {
+      res.status(404).send("No Products found!");
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
 // Edit Product / Modify Product
 const EditProduct = async (req: Request, res: Response) => {
   try {
@@ -131,6 +150,7 @@ export {
   CreateProduct,
   GetProduct,
   GetAllProducts,
+  GetAllProductsInCategory,
   GetAllProductsOfBusiness,
   EditProduct,
   RemoveProduct,
