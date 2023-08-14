@@ -9,7 +9,7 @@ import AuthMiddleware from "../middlewares/AuthMiddleware";
 
 const BusinessRouter = express.Router();
 
-BusinessRouter.get("/login", BusinessLogin);
+BusinessRouter.post("/login", BusinessLogin);
 BusinessRouter.post("/signup", BusinessSignup);
 BusinessRouter.put("/editProfile", AuthMiddleware, EditBusinessAccount);
 BusinessRouter.delete("/removeAccount", AuthMiddleware, RemoveBusinessAccount);

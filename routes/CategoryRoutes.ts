@@ -4,12 +4,14 @@ import {
   EditCategory,
   GetAllCategories,
   GetCategory,
+  GetCategoryById,
   RemoveCategory,
 } from "../controllers/CategoryController";
 
 const CategoryRouter = express.Router();
 
 CategoryRouter.get("/getCategory", GetCategory);
+CategoryRouter.get("/getCategoryById/:id", GetCategoryById);
 CategoryRouter.get("/getAllCategories", GetAllCategories);
 CategoryRouter.post("/createCategory", CreateCategory);
 CategoryRouter.put("/editCategory/:id", EditCategory);

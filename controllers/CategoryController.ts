@@ -46,6 +46,25 @@ const GetCategory = async (req: Request, res: Response) => {
   }
 };
 
+// Get / Access One Categories
+const GetCategoryById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const category = await prisma.category.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (category) {
+      res.status(200).json(category);
+    } else {
+      res.status(401).send("No categories found!");
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
 // Get / Access All Categories
 const GetAllCategories = async (req: Request, res: Response) => {
   try {
@@ -110,6 +129,7 @@ const RemoveCategory = async (req: Request, res: Response) => {
 export {
   CreateCategory,
   GetCategory,
+  GetCategoryById,
   GetAllCategories,
   EditCategory,
   RemoveCategory,

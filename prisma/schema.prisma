@@ -12,44 +12,52 @@ datasource db {
 
 // MODEL Customer
 model Customer {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   firstName String
   lastName  String
   email     String
   phone     String
   password  String
+  addedAt   DateTime @default(now())
 }
 
 // MODEL Business
 model Business {
-  id             String @id @default(uuid())
+  id             String   @id @default(uuid())
   name           String
   email          String
   phone          String
   description    String
+  address        String   @default("")
   location       String
   profilePicture String
   password       String
+  addedAt        DateTime @default(now())
 }
 
 // MODEL Product
 model Product {
-  id             String @id @default(uuid())
+  id             String   @id @default(uuid())
   name           String
-  price          String
+  price          Int
   sellerId       String
   category       String
   description    String
-  availableUnits String
+  availableUnits Int
   productImage   String
+  deliveryRadius String   @default("")
+  cashOnDelivery Boolean  @default(false)
+  isReturnable   Boolean  @default(false)
+  addedAt        DateTime @default(now())
 }
 
 // MODEL Category
 model Category {
-  id            String @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
   description   String
   categoryImage String
+  addedAt       DateTime @default(now())
 }
 
 // MODEL Business Review
@@ -58,26 +66,27 @@ model BusinessReview {
   ofBusiness String
   reviewBy   String
   rating     String
-  reviewDate DateTime @default(now())
+  addedAt    DateTime @default(now())
 }
 
 // MODEL Product Review
 model ProductReview {
-  id         String   @id @default(uuid())
-  ofProduct  String
-  reviewBy   String
-  rating     String
-  reviewDate DateTime @default(now())
+  id        String   @id @default(uuid())
+  ofProduct String
+  reviewBy  String
+  rating    String
+  addedAt   DateTime @default(now())
 }
 
 // MODEL MonthSales
 model MonthSales {
-  id                String @id @default(uuid())
+  id                String   @id @default(uuid())
   ofBusiness        String
   month             String
-  totalSales        Float  @default(0)
-  paymentDue        Float  @default(0)
-  chargedPercentage Float  @default(2)
+  totalSales        Float    @default(0)
+  paymentDue        Float    @default(0)
+  chargedPercentage Float    @default(2)
+  addedAt           DateTime @default(now())
 }
 
 // MODEL Order
@@ -94,5 +103,5 @@ model Order {
   orderStatus     String   @default("Incomplete")
   cashOnDelivery  Boolean
   isReturnable    Boolean
-  orderDate       DateTime @default(now())
+  addedAt         DateTime @default(now())
 }

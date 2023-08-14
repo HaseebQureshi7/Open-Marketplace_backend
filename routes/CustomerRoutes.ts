@@ -9,7 +9,7 @@ import AuthMiddleware from "../middlewares/AuthMiddleware";
 
 const CustomerRouter = express.Router();
 
-CustomerRouter.get("/login", CustomerLogin);
+CustomerRouter.post("/login", CustomerLogin);
 CustomerRouter.post("/signup", CustomerSignup);
 CustomerRouter.put("/editProfile", AuthMiddleware, EditCustomerAccount);   // Extracts ID from JWT to modify profile
 CustomerRouter.delete(

@@ -50,7 +50,11 @@ const GetProduct = async (req: Request, res: Response) => {
 // Get / Access All Products
 const GetAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await prisma.product.findMany();
+    const products = await prisma.product.findMany({
+      orderBy: {
+        id : "desc"
+      }
+    });
     if (products) {
       res.status(200).json(products);
     } else {
@@ -69,6 +73,9 @@ const GetAllProductsOfBusiness = async (req: Request, res: Response) => {
       where: {
         sellerId: bid,
       },
+      orderBy: {
+        id : "desc"
+      }
     });
     if (products) {
       res.status(200).json(products);
@@ -134,13 +141,13 @@ const RemoveProduct = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     await prisma.product
-      .delete({
+      .deleteMany({
         where: {
           id,
         },
       })
       .then(() => res.status(201).json("Product Deleted!"))
-      .catch(() => res.status(403).send("Something went wrong!"));
+      .catch((e) => res.status(403).send(e));
   } catch (err) {
     res.status(400).send(err);
   }
