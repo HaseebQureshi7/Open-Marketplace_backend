@@ -50,6 +50,29 @@ const CustomerLogin = async (req: Request, res: Response) => {
   }
 };
 
+// Get Customer / Access Customer Account
+const GetCustomer = async (req: Request, res: Response) => {
+  try {
+    const cid = req.params.cid;
+    const customer = await prisma.customer.findFirst({
+      where: {
+        id: cid,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        phone:true,
+        email: true,
+        password: false,
+      },
+    });
+    res.status(200).json(customer);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
 // Edit Profile / Modify Account
 const EditCustomerAccount = async (req: Request, res: Response) => {
   try {
@@ -94,6 +117,7 @@ const RemoveCustomerAccount = async (req: Request, res: Response) => {
 export {
   CustomerSignup,
   CustomerLogin,
+  GetCustomer,
   EditCustomerAccount,
   RemoveCustomerAccount,
 };

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { ReturnCurrentMonth } from "../utils/ReturnCurrentMonth";
 
 const prisma = new PrismaClient();
 
@@ -24,7 +25,8 @@ const GetMonthSales = async (req: Request, res: Response) => {
     const id = req.params.id;
     const monthSales = await prisma.monthSales.findFirst({
       where: {
-        id,
+        ofBusiness: id,
+        month: ReturnCurrentMonth()
       },
     });
     if (monthSales) {
@@ -58,35 +60,64 @@ const GetAllMonthSales = async (req: Request, res: Response) => {
 
 // Edit MonthSales / Modify MonthSales
 const EditMonthSales = async (req: Request, res: Response) => {
-  try {
+  // try {
     const data = req.body;
     const id = req.params.id;
-    await prisma.monthSales
-      .update({
+
+    const isSalePresent = await prisma.monthSales.findFirst({
+      where: {
+        ofBusiness: id,
+        month: ReturnCurrentMonth(),
+      },
+    });
+
+    if (isSalePresent) {
+      const updatedMSales = await prisma.monthSales.update({
         where: {
-          id,
+          id: isSalePresent.id,
         },
-        data,
-      })
-      .then(() => res.status(201).json("MonthSales Updated!"))
-      .catch(() => res.status(403).send("Something went wrong!"));
-  } catch (err) {
-    res.status(400).send(err);
-  }
+        data: {
+          totalSales: isSalePresent.totalSales + data.totalSales,
+        },
+      });
+
+      if (updatedMSales) {
+        res.status(201).json(updatedMSales);
+      } else {
+        res.status(403).send("No monthly sale found!");
+      }
+    } else {
+      const monthSales = await prisma.monthSales.create({
+        data: {
+          ofBusiness: id,
+          month: ReturnCurrentMonth(),
+          totalSales: data?.totalSales,
+        },
+      });
+      if (monthSales) {
+        res.status(201).json(monthSales);
+      } else {
+        res.status(400).send("Opertaions on MS went wrong!");
+      }
+    }
+  // } catch (err) {
+  //   res.status(400).send(err);
+  // }
 };
 
 // Remove MonthSales / Delete MonthSales
 const RemoveMonthSales = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
+    console.log(id);
     await prisma.monthSales
       .delete({
         where: {
           id,
         },
       })
-      .then(() => res.status(201).json("MonthSales Deleted!"))
-      .catch(() => res.status(403).send("Something went wrong!"));
+      .then(() => res.status(200).json("MonthSales Deleted!"))
+      .catch((err) => res.status(403).send(err));
   } catch (err) {
     res.status(400).send(err);
   }
