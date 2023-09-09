@@ -32,6 +32,7 @@ const CreateProduct = async (req: Request, res: Response) => {
 const GetProduct = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
+    // console.log(id)
     const product = await prisma.product.findUnique({
       where: {
         id,
@@ -52,8 +53,8 @@ const GetAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await prisma.product.findMany({
       orderBy: {
-        id : "desc"
-      }
+        id: "desc",
+      },
     });
     if (products) {
       res.status(200).json(products);
@@ -74,8 +75,8 @@ const GetAllProductsOfBusiness = async (req: Request, res: Response) => {
         sellerId: bid,
       },
       orderBy: {
-        id : "desc"
-      }
+        id: "desc",
+      },
     });
     if (products) {
       res.status(200).json(products);
@@ -112,7 +113,8 @@ const EditProduct = async (req: Request, res: Response) => {
     const data = req.body;
     const id = req.params.id;
 
-    if (data.productImage) {
+    if (data.productImage.includes("static")) {
+    } else {
       const imageUrl = SaveProfilePicture(data.productImage, "product");
       if (imageUrl) {
         // fs.unlink(`../static/business/${data.profilePicture}`, () => {

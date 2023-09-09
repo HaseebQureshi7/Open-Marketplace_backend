@@ -13,7 +13,7 @@ const ProductRouter = express.Router();
 
 ProductRouter.get("/getProduct/:id", GetProduct);
 ProductRouter.get("/getAllProducts", GetAllProducts);
-ProductRouter.get("gGetAllProductsInCategory/:cid", GetAllProductsInCategory);
+ProductRouter.get("getAllProductsInCategory/:cid", GetAllProductsInCategory);
 ProductRouter.get("/getAllProductsOfBusiness/:bid", GetAllProductsOfBusiness);
 ProductRouter.post("/createProduct", CreateProduct);
 ProductRouter.put("/editProduct/:id", EditProduct);

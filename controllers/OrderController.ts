@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 const CreateOrder = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    // console.log(data)
     const order = await prisma.order.create({ data });
     if (order) {
       res.status(201).json(order);
