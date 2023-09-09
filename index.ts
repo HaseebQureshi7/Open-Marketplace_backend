@@ -1,4 +1,5 @@
-import express, { urlencoded, json } from "express";
+// import express, { urlencoded, json } from "express";
+const express = require("express");
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
@@ -15,8 +16,8 @@ dotenv.config();
 const App = express();
 const port = process.env.PORT || 4000;
 
-App.use(urlencoded({ extended: false, limit: "2mb" }));
-App.use(json({ limit: "2mb" }));
+App.use(express.urlencoded({ extended: false, limit: "2mb" }));
+App.use(express.json({ limit: "2mb" }));
 App.use(cors());
 
 // Routes
