@@ -60,7 +60,7 @@ const GetAllMonthSales = async (req: Request, res: Response) => {
 
 // Edit MonthSales / Modify MonthSales
 const EditMonthSales = async (req: Request, res: Response) => {
-  // try {
+  try {
     const data = req.body;
     const id = req.params.id;
 
@@ -100,9 +100,9 @@ const EditMonthSales = async (req: Request, res: Response) => {
         res.status(400).send("Opertaions on MS went wrong!");
       }
     }
-  // } catch (err) {
-  //   res.status(400).send(err);
-  // }
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 
 // Remove MonthSales / Delete MonthSales

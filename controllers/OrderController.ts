@@ -46,6 +46,9 @@ const GetAllOrdersForCustomer = async (req: Request, res: Response) => {
       where: {
         customerId,
       },
+      orderBy: {
+        addedAt : "desc"
+      }
     });
     if (orders) {
       res.status(200).json(orders);
@@ -63,8 +66,12 @@ const GetAllOrdersForBusiness = async (req: Request, res: Response) => {
   try {
     const orders = await prisma.order.findMany({
       where: {
-        businessId, // compare if orderStatus == "incomplete"
+        businessId,
+        orderStatus : "Incomplete"
       },
+      orderBy: {
+        addedAt : "desc"
+      }
     });
     if (orders) {
       res.status(200).json(orders);
