@@ -68,7 +68,11 @@ const GetCategoryById = async (req: Request, res: Response) => {
 // Get / Access All Categories
 const GetAllCategories = async (req: Request, res: Response) => {
   try {
-    const category = await prisma.category.findMany();
+    const category = await prisma.category.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
     if (category) {
       res.status(200).json(category);
     } else {

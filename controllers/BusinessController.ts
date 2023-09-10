@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 // Signup / Create Account
 const BusinessSignup = async (req: Request, res: Response) => {
-  try {
+  // try {
     const data = req.body;
     const profilePictureBase64 = data.profilePicture; // Extract Base64 data from req.body
     delete data.profilePicture; // Remove Base64 data from the 'data' object
@@ -29,9 +29,9 @@ const BusinessSignup = async (req: Request, res: Response) => {
     } else {
       res.status(400).send("Business not created!");
     }
-  } catch (err) {
-    res.status(400).send(err);
-  }
+  // } catch (err) {
+  //   res.status(400).send(err);
+  // }
 };
 
 // Login / Access Account

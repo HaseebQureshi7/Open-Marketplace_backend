@@ -91,6 +91,7 @@ const GetAllProductsOfBusiness = async (req: Request, res: Response) => {
 // Get / Access All Products
 const GetAllProductsInCategory = async (req: Request, res: Response) => {
   const catId = req.params.cid;
+  console.log(catId)
   try {
     const products = await prisma.product.findMany({
       where: {
